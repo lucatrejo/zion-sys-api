@@ -23,6 +23,7 @@ async function getCategories(req, res) {
   try {
     categories = await getAll();
   } catch (error) {
+    logger.error(error);
     return res.status(500).send({ success: false, messages: { GET_ERROR_MESSAGE } });
   }
 
