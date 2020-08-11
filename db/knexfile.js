@@ -1,5 +1,5 @@
 require('dotenv').config({
-  path: `../env-files/${process.env.NODE_ENV || 'development'}.env`,
+  path: `../env-files/${process.env.NODE_ENV || 'production'}.env`,
 });
 
 global.Promise = require('bluebird');
@@ -57,6 +57,7 @@ module.exports = {
       database: process.env.DATABASE_NAME,
       user: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
+      ssl: true
     },
     pool: {
       min: 2,
