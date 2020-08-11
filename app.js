@@ -24,6 +24,8 @@ if (process.env.REDIS_PASSWORD) {
   redisStoreConfig.password = process.env.REDIS_PASSWORD; // this will use the REDIS_PASSWORD if required
 }
 
+logger.info('environment:');
+logger.info(process.env.NODE_ENV);
 const redisStore = new RedisStore(redisStoreConfig);
 
 const app = express();
