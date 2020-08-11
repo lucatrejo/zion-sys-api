@@ -1,14 +1,17 @@
 const { getById, getAll } = require('../repository');
 const { GET_ERROR_MESSAGE } = require('../constants');
 const logger = require('../../../logger');
+const debug = require('debug')('express:www');
 
 async function getCategory(req, res) {
+  debug(`get_category`);
   let category = {};
   const id = req.params.id;
   
   try {
     category = await getById({ id });
   } catch (error) {
+    debug(error);
     return res.status(500).send({ success: false, messages: { GET_ERROR_MESSAGE } });
   }
 
