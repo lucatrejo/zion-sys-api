@@ -10,6 +10,7 @@ exports.up = async function up(knex) {
     table.string('description', 60).notNullable();
     table.decimal('price').notNullable();
     table.bigInteger('stock').defaultTo(0);
+    table.bigInteger('critical_stock');
     table.integer('category_id').unsigned().notNullable();
     table
       .timestamp('created_at')

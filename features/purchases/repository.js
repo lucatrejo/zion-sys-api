@@ -89,11 +89,28 @@ async function getDetailById(id) {
     return details;
 }
 
+async function getTopItemsDb() {
+  const topItems = await knex('purchases_detail')
+    .join('items', 'purchases_detail.item_id', 'items.id')
+    .select('purchases_detail.item_id', 'items.code', 'items.name', knex.raw('COUNT(*)'))
+    .groupByRaw('purchases_detail.item_id, items.code, items.name');
+  return topItems;
+}
+
+async function getItemsCriticalStockDb() {
+  const topItems = await knex('items')
+    .select('id', 'code', 'name', 'stock', 'critical_stock')
+    .whereRaw('stock between 0 and critical_stock');
+  return topItems;
+}
+
 module.exports = {
   insert,
   insertDetail,
   update,
   getById,
   getAll,
-  getDetailById
+  getDetailById,
+  getTopItemsDb,
+  getItemsCriticalStockDb
 };

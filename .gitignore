@@ -5,3 +5,6 @@ yarn-error.log
 .vscode
 /dist
 package-lock.json
+*.idea
+*.iml
+/idea

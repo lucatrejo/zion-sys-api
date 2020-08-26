@@ -7,6 +7,7 @@ exports.seed = async function seed(knex) {
     name: 'ZAPATILLA NIKE',
     description: 'Zapatilla Nike',
     price: 1250.00,
+    critical_stock: 1,
     created_at: new Date(),
     updated_at: new Date(),
   });
