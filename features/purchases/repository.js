@@ -80,6 +80,25 @@ async function getAll() {
   return purchases;
 }
 
+async function getAllMonth() {
+  const purchases = await knex(TABLE_NAME)
+    .join('employees', 'purchases.employee_id', 'employees.id')
+    .join('providers', 'purchases.provider_id', 'providers.id')
+    .whereRaw('EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM NOW())')
+    .select('purchases.id', {employee_name:  'employees.name'},  {employee_last_name: 'employees.last_name'}, {provider: 'providers.name'}, 'purchases.date');
+  return purchases;
+}
+
+async function getAllOrderByEmployee() {
+  const purchases = await knex(TABLE_NAME)
+    .join('employees', 'purchases.employee_id', 'employees.id')
+    .join('providers', 'purchases.provider_id', 'providers.id')
+    .whereRaw('EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM NOW())')
+    .orderBy('employees.last_name', 'desc')
+    .select('purchases.id', {employee_name:  'employees.name'},  {employee_last_name: 'employees.last_name'}, {provider: 'providers.name'}, 'purchases.date');
+  return purchases;
+}
+
 async function getDetailById(id) {
   const details = await knex('purchases_detail')
     .join('items', 'purchases_detail.item_id', 'items.id')
@@ -112,5 +131,7 @@ module.exports = {
   getAll,
   getDetailById,
   getTopItemsDb,
-  getItemsCriticalStockDb
+  getItemsCriticalStockDb,
+  getAllMonth,
+  getAllOrderByEmployee
 };

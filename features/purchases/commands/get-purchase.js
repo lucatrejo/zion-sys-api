@@ -1,4 +1,4 @@
-const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb } = require('../repository');
+const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb, getAllMonth, getAllOrderByEmployee } = require('../repository');
 const logger = require('../../../logger');
 
 async function getPurchase(req, res) {
@@ -21,6 +21,50 @@ async function getPurchasesWithDetail(req, res) {
   
   try {
     purchases = await getAll();
+
+    for (let purchase of purchases) {
+      let details = [];
+      details = await getDetailById(purchase.id);
+      purchase.details = details;
+    }
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, message: 'error getting purchases' });
+  }
+
+  if (purchases) {
+    return res.send({ purchases });
+  }
+}
+
+async function getPurchasesWithDetailMonth(req, res) {
+  let purchases = [];
+
+  try {
+    purchases = await getAllMonth();
+
+    for (let purchase of purchases) {
+      let details = [];
+      details = await getDetailById(purchase.id);
+      purchase.details = details;
+    }
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, message: 'error getting purchases' });
+  }
+
+  if (purchases) {
+    return res.send({ purchases });
+  }
+}
+
+async function getPurchasesWithDetailOrderEmployee(req, res) {
+  let purchases = [];
+
+  try {
+    purchases = await getAllOrderByEmployee();
 
     for (let purchase of purchases) {
       let details = [];
@@ -105,5 +149,7 @@ module.exports = {
   getPurchasesWithDetail,
   getPurchaseDetail,
   getTopItems,
-  getItemsCriticalStock
+  getItemsCriticalStock,
+  getPurchasesWithDetailMonth,
+  getPurchasesWithDetailOrderEmployee
 };
