@@ -1,4 +1,4 @@
-const { insert, insertDetail } = require('../repository');
+const { insert, insertDetail, updateStock } = require('../repository');
 const logger = require('../../../logger');
 
 async function createPurchase(req, res) {
@@ -10,6 +10,7 @@ async function createPurchase(req, res) {
 
     req.body.details.forEach(d => {
       insertDetail(purchase.id, d.item_id, d.unit_price, d.quantity);
+      updateStock(d.item_id, d.quantity);
     });
   } catch (error) {
     logger.error(error);

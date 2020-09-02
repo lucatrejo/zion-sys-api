@@ -1,7 +1,7 @@
 const knex = require('../../db');
 const logger = require('../../logger');
 
-async function insert({ code, name, description, price, stock, critical_stock, category_id }) {
+async function insert({name, description, price, stock, critical_stock, category_id }) {
   const columnInfo = await knex('items').columnInfo();
   const columns = Object.keys(columnInfo);
 
@@ -50,7 +50,7 @@ async function getById(id) {
 async function getAll() {
   const items = await knex('items')
     .join('categories', 'categories.id', 'items.category_id')
-    .select(['items.id', 'items.code', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {catgegory: 'categories.name'}]);
+    .select(['items.id', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {catgegory: 'categories.name'}]);
   return items;
 }
 

@@ -32,6 +32,14 @@ async function insertDetail(purchase_id, item_id, unit_price, quantity) {
   return purchase_detail;
 }
 
+async function updateStock(item_id, quantity) {
+  await knex('items')
+    .where('id', item_id)
+    .update({
+      stock: knex.raw('?? + ' + quantity, ['stock'])
+    })
+}
+
 async function update({ id, employee_id, provider_id }) {
   const columnInfo = await knex(TABLE_NAME).columnInfo();
   const columns = Object.keys(columnInfo);
@@ -133,5 +141,6 @@ module.exports = {
   getTopItemsDb,
   getItemsCriticalStockDb,
   getAllMonth,
-  getAllOrderByEmployee
+  getAllOrderByEmployee,
+  updateStock
 };
