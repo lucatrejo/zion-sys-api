@@ -7,7 +7,6 @@ async function insert({name, description, price, stock, critical_stock, category
 
   const [item] = await knex('items')
   .insert({
-    code: code,
     name: name,
     description: description,
     price: price,
