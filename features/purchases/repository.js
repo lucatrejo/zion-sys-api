@@ -120,8 +120,9 @@ async function getDetailById(id) {
 async function getTopItemsDb() {
   const topItems = await knex('purchases_detail')
     .join('items', 'purchases_detail.item_id', 'items.id')
-    .select('purchases_detail.item_id', 'items.code', 'items.name', knex.raw('COUNT(*)'))
-    .groupByRaw('purchases_detail.item_id, items.code, items.name');
+    .select('purchases_detail.item_id', 'items.code', 'items.name', 'items.stock',knex.raw('COUNT(*)'))
+    .orderBy('count', 'desc')
+    .groupByRaw('purchases_detail.item_id, items.code, items.name, items.stock');
   return topItems;
 }
 

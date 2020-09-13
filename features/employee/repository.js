@@ -51,7 +51,7 @@ async function getById(id) {
 
 async function getAll() {
   const employees = await knex(TABLE_NAME)
-    .select(knex.raw('id, name, last_name, cuil, identification, to_char(birthdate,\'MM/DD/YYYY\') as birthdate, address, to_char(admission_date,\'DD/MM/YYYY\') as admission_date'));
+    .select(knex.raw('id, name, last_name, cuil, identification, to_char(birthdate,\'DD/MM/YYYY\') as birthdate, address, to_char(admission_date,\'DD/MM/YYYY\') as admission_date'));
   return employees;
 }
 
