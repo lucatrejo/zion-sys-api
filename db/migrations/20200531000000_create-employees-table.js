@@ -7,10 +7,12 @@ exports.up = async function up(knex) {
       .primary(['employee_job_pkey']);
     table.string('name', 55).notNullable();
     table.string('cuil', 55).notNullable();
-    table.string('admission_date', 30);
+    table.date('admission_date')
+      .notNullable()
+      .defaultTo(knex.fn.now());
     table.string('last_name', 55).notNullable();
-    table.string('identification', 30);
-    table.string('birthdate', 30);
+    table.string('identification', 30).notNullable();
+    table.date('birthdate');
     table.string('address', 55);
     table
       .timestamp('created_at')
@@ -20,6 +22,8 @@ exports.up = async function up(knex) {
       .timestamp('updated_at')
       .notNullable()
       .defaultTo(knex.fn.now());
+
+    table.unique('identification');
   });
 };
 

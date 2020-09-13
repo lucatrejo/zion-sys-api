@@ -23,8 +23,8 @@ async function createEmployee(req, res) {
   const { code } = employee;
 
   if(code === '23505') {
-    const name = 'El nombre del empleado ya existe.';
-    return res.status(500).send({ success: false, messages: { errors: { name }} });
+    const identification = 'El dni del empleado ya existe.';
+    return res.status(500).send({ success: false, messages: { errors: { identification }} });
   }
 
   const databaseError = 'Hubo un problema en la creación del empleado.';
