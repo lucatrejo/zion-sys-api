@@ -75,7 +75,7 @@ async function updateDetail({ id, purchase_id, item_id, unit_price, quantity }) 
 
 async function getById(id) {
   const [provider] = await knex(TABLE_NAME)
-    .select(knex.raw('id, employee_id, provider_id, to_char(date, \'MM/DD/YYYY\') as date'))
+    .select(knex.raw('id, employee_id, provider_id, to_char(date, \'DD/MM/YYYY\') as date'))
     .where(id)
     .limit(1);
   return provider;
@@ -85,7 +85,7 @@ async function getAll() {
   const purchases = await knex(TABLE_NAME)
     .join('employees', 'purchases.employee_id', 'employees.id')
     .join('providers', 'purchases.provider_id', 'providers.id')
-    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'MM/DD/YYYY\') as date'));
+    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date'));
   return purchases;
 }
 
@@ -94,7 +94,7 @@ async function getAllMonth() {
     .join('employees', 'purchases.employee_id', 'employees.id')
     .join('providers', 'purchases.provider_id', 'providers.id')
     .whereRaw('EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM NOW())')
-    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'MM/DD/YYYY\') as date'));
+    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date'));
   return purchases;
 }
 
@@ -104,7 +104,7 @@ async function getAllOrderByEmployee() {
     .join('providers', 'purchases.provider_id', 'providers.id')
     .whereRaw('EXTRACT(MONTH FROM date) = EXTRACT(MONTH FROM NOW())')
     .orderBy('employees.last_name', 'desc')
-    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'MM/DD/YYYY\') as date'));
+    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date'));
   return purchases;
 }
 
