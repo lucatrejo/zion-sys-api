@@ -8,6 +8,7 @@ exports.seed = async function seed(knex) {
     description: 'Zapatilla Nike',
     price: 1250.00,
     critical_stock: 1,
+    stock: 10,
     created_at: new Date(),
     updated_at: new Date(),
   });
@@ -18,6 +19,7 @@ exports.seed = async function seed(knex) {
     name: 'VASOS VIDRIO',
     description: 'Vasos de vidrio',
     price: 150.00,
+    stock: 10,
     created_at: new Date(),
     updated_at: new Date(),
   });

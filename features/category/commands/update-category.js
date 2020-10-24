@@ -1,27 +1,32 @@
 const { update } = require('../repository');
-const { CREATE_ERROR_MESSAGE, CREATE_SUCCESS_MESSAGE } = require('../constants');
-const logger = require('../../../logger');
 
 async function updateCategory(req, res) {
-  logger.info('UPDATE_CATEGORY');
   let category = {};
   const id = req.params.id;
   
   try {
     category = await update({ ...req.body, id });
-    logger.info(category);
   } catch (error) {
-    logger.error(error);
     category = error;
   }
 
   if (category.id) {
-    return res.send(category);
+    return res.send({
+      success: true,
+      category: {...category},
+      messages: {success: 'La categoría se actualizó con éxito.'}
+    });
   }
-  
-  const databaseError = CREATE_ERROR_MESSAGE;
 
-  return res.status(500).send({ success: false, messages: { databaseError } });
+  const { code } = category;
+
+  if(code === '23505') {
+    const name = 'El nombre de la categoría ya existe.';
+    return res.status(500).send({ success: false, messages: { errors: { name }} });
+  }
+
+  const databaseError = 'Hubo un problema en la actualización de la categoría.';
+  return res.status(500).send({ success: false, messages: { errors: { databaseError }} });
 }
 
 module.exports = updateCategory;

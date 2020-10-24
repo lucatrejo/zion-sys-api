@@ -49,7 +49,7 @@ async function getById(id) {
 async function getAll() {
   const items = await knex('items')
     .join('categories', 'categories.id', 'items.category_id')
-    .select(['items.id', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {catgegory: 'categories.name'}]);
+    .select(['items.id', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {category: 'categories.name'}, {category_id: 'categories.id'}]);
   return items;
 }
 

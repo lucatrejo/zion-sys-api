@@ -1,24 +1,32 @@
 const { update } = require('../repository');
-const logger = require('../../../logger');
 
 async function updateEmployee(req, res) {
   let employee = {};
   const id = req.params.id;
-  logger.info("id: " + id);
-  
+
   try {
     employee = await update({ ...req.body, id });
-    logger.info(employee);
   } catch (error) {
-    logger.error(error);
     employee = error;
   }
 
   if (employee.id) {
-    return res.send(employee);
+    return res.send({
+      success: true,
+      employee: { ...employee },
+      messages: { success: 'El empleado se ha actualizado con éxito.' }
+    });
   }
-  
-  return res.status(500).send({ success: false, messages: 'error updating employee' });
+
+  const { code } = employee;
+
+  if(code === '23505') {
+    const identification = 'El dni del empleado ya existe.';
+    return res.status(500).send({ success: false, messages: { errors: { identification }} });
+  }
+
+  const databaseError = 'Hubo un problema en la actualización del empleado.';
+  return res.status(500).send({ success: false, messages: { errors: { databaseError }} });
 }
 
 module.exports = updateEmployee;
