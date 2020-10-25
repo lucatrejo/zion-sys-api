@@ -48,10 +48,17 @@ async function getAll() {
     .select(['id', 'name', 'business_name', 'description', 'address']);
   return providers;
 }
+async function deleteById(id) {
+  console.log("ACA LLEGO")
+  await knex(TABLE_NAME)
+    .where({id})
+    .del();
+}
 
 module.exports = {
   insert,
   update,
   getById,
   getAll,
+  deleteById,
 };

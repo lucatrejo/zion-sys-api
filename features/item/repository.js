@@ -52,10 +52,17 @@ async function getAll() {
     .select(['items.id', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {category: 'categories.name'}, {category_id: 'categories.id'}]);
   return items;
 }
+async function deleteById(id) {
+  logger.error("BASTAAAA");
+  await knex('items')
+    .where({id})
+    .del();
+}
 
 module.exports = {
   insert,
   update,
   getById,
   getAll,
+  deleteById,
 };
