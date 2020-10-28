@@ -1,11 +1,12 @@
-const { getById, getAll } = require('../repository');
+
+const { getById, getAll,getItemWithName } = require('../repository');
 const { GET_ERROR_MESSAGE } = require('../constants');
 const logger = require('../../../logger');
 
 async function getItem(req, res) {
   let item = {};
   const id = req.params.id;
-  
+
   try {
     item = await getById({ id });
   } catch (error) {
@@ -19,7 +20,7 @@ async function getItem(req, res) {
 
 async function getItems(req, res) {
   let items = [];
-  
+
   try {
     items = await getAll();
   } catch (error) {
@@ -32,8 +33,23 @@ async function getItems(req, res) {
     return res.send({ items });
   }
 }
+async function getItemByName(req, res) {
+  let items = [];
+  const name = req.params.name;
+
+  try {
+    items = await getItemWithName(name);
+  } catch (error) {
+    return res.status(500).send({ success: false, messages: { GET_ERROR_MESSAGE } });
+  }
+
+  if (items) {
+    return res.send({ items });
+  }
+}
 
 module.exports = {
   getItem,
   getItems,
+  getItemByName,
 };

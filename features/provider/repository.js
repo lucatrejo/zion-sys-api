@@ -42,6 +42,12 @@ async function getById(id) {
     .limit(1);
   return provider;
 }
+async function getProvidersWithName(name) {
+  const providers = await knex(TABLE_NAME)
+    .select(['id', 'name', 'business_name', 'description', 'address'])
+    .where('name' , 'like', `%${name}%`);
+  return providers;
+}
 
 async function getAll() {
   const providers = await knex(TABLE_NAME)
@@ -61,4 +67,5 @@ module.exports = {
   getById,
   getAll,
   deleteById,
+  getProvidersWithName
 };

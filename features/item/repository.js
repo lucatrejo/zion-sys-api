@@ -45,6 +45,12 @@ async function getById(id) {
     .limit(1);
   return item;
 }
+async function getItemWithName(name) {
+  const items = await knex('items')
+    .join('categories', 'categories.id', 'items.category_id')
+    .select(['items.id', 'items.name', 'items.description', 'items.price', 'items.stock', 'items.critical_stock', {category: 'categories.name'}, {category_id: 'categories.id'}]).where('items.name' , 'like', `%${name}%`);
+  return items;
+}
 
 async function getAll() {
   const items = await knex('items')
@@ -53,7 +59,6 @@ async function getAll() {
   return items;
 }
 async function deleteById(id) {
-  logger.error("BASTAAAA");
   await knex('items')
     .where({id})
     .del();
@@ -65,4 +70,5 @@ module.exports = {
   getById,
   getAll,
   deleteById,
+  getItemWithName,
 };

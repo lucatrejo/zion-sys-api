@@ -36,6 +36,12 @@ async function getAll() {
     .select(['id', 'name', 'description']);
   return categories;
 }
+async function getCategoriesWithName(name) {
+  const items = await knex('categories')
+    .select(['id', 'name', 'description'])
+    .where('name' , 'like', `%${name}%`);
+  return items;
+}
 
 async function deleteById(id) {
   await knex('categories')
@@ -48,5 +54,6 @@ module.exports = {
   update,
   getById,
   getAll,
-  deleteById
+  deleteById,
+  getCategoriesWithName
 };
