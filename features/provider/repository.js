@@ -45,20 +45,29 @@ async function getById(id) {
 async function getProvidersWithName(name) {
   const providers = await knex(TABLE_NAME)
     .select(['id', 'name', 'business_name', 'description', 'address'])
-    .where('name' , 'like', `%${name}%`);
+    .where('name', 'ilike', `%${name}%`)
+    .andWhere('enable', '=', true);
   return providers;
 }
 
 async function getAll() {
   const providers = await knex(TABLE_NAME)
-    .select(['id', 'name', 'business_name', 'description', 'address']);
+    .select(['id', 'name', 'business_name', 'description', 'address'])
+    .where('enable', '=', true);;
   return providers;
 }
 async function deleteById(id) {
-  console.log("ACA LLEGO")
-  await knex(TABLE_NAME)
+  const columnInfo = await knex(TABLE_NAME).columnInfo();
+  const columns = Object.keys(columnInfo);
+
+  const [provider] = await knex(TABLE_NAME)
     .where({id})
-    .del();
+    .update({
+      enable: false,
+      updated_at: new Date(),
+    })
+    .returning(columns);
+  return provider;
 }
 
 module.exports = {

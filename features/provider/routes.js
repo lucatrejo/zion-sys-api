@@ -4,7 +4,7 @@ const router = require('express').Router();
 const createProvider = require('./commands/create-provider');
 const updateProvider = require('./commands/update-provider');
 const deleteProvider = require('./commands/delete-provider');
-const { getProvider, getProviders,getProviderByName } = require('./commands/get-provider');
+const { getProvider, getProviders, getProviderByName } = require('./commands/get-provider');
 
 router.post('/', wrap(createProvider));
 router.put('/:id', wrap(updateProvider));

@@ -33,20 +33,27 @@ async function getById(id) {
 
 async function getAll() {
   const categories = await knex('categories')
-    .select(['id', 'name', 'description']);
+    .select(['id', 'name', 'description'])
+    .where('enable', '=', true);
   return categories;
 }
 async function getCategoriesWithName(name) {
   const items = await knex('categories')
     .select(['id', 'name', 'description'])
-    .where('name' , 'ilike', `%${name}%`);
+    .where('name' , 'ilike', `%${name}%`)
+    .andWhere('enable', '=', true);
   return items;
 }
 
 async function deleteById(id) {
-  await knex('categories')
+  const [category] = await knex('categories')
     .where({id})
-    .del();
+    .update({
+      enable: false,
+      updated_at: new Date(),
+    })
+    .returning(['id', 'name', 'description']);
+  return category;
 }
 
 module.exports = {

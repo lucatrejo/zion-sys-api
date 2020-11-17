@@ -13,11 +13,14 @@ exports.up = async function up(knex) {
       .timestamp('created_at')
       .notNullable()
       .defaultTo(knex.fn.now());
+    table.boolean('enable')
+      .notNullable()
+      .defaultTo(true);
     table
       .timestamp('updated_at')
       .notNullable()
       .defaultTo(knex.fn.now());
-    
+
     table.unique('name');
   });
 };
