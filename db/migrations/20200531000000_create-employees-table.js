@@ -14,6 +14,9 @@ exports.up = async function up(knex) {
     table.string('identification', 30).notNullable();
     table.date('birthdate');
     table.string('address', 55);
+    table.boolean('enable')
+      .notNullable()
+      .defaultTo(true);
     table
       .timestamp('created_at')
       .notNullable()

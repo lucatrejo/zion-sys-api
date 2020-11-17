@@ -53,5 +53,5 @@ async function getCategoriesByName(req, res) {
 module.exports = {
   getCategory,
   getCategories,
-  getCategoriesByName
+  getCategoriesByName,
 };

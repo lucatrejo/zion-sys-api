@@ -39,7 +39,7 @@ async function getAll() {
 async function getCategoriesWithName(name) {
   const items = await knex('categories')
     .select(['id', 'name', 'description'])
-    .where('name' , 'like', `%${name}%`);
+    .where('name' , 'ilike', `%${name}%`);
   return items;
 }
 

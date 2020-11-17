@@ -1,10 +1,10 @@
-const { getById, getAll } = require('../repository');
+const { getById, getAll, getEmployeesWithName } = require('../repository');
 const logger = require('../../../logger');
 
 async function getEmployee(req, res) {
   let employee = {};
   const id = req.params.id;
-  
+
   try {
     employee = await getById({ id });
   } catch (error) {
@@ -18,7 +18,7 @@ async function getEmployee(req, res) {
 
 async function getEmployees(req, res) {
   let employees = [];
-  
+
   try {
     employees = await getAll();
   } catch (error) {
@@ -30,7 +30,24 @@ async function getEmployees(req, res) {
   }
 }
 
+async function getEmployeeByName(req, res) {
+  let employees = [];
+  const name = req.params.name;
+
+  try {
+    employees = await getEmployeesWithName(name);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting employee' });
+  }
+
+  if (employees) {
+    return res.send({ employees });
+  }
+}
+
 module.exports = {
   getEmployee,
   getEmployees,
+  getEmployeeByName,
 };

@@ -51,8 +51,38 @@ async function getById(id) {
 
 async function getAll() {
   const employees = await knex(TABLE_NAME)
-    .select(knex.raw('id, name, last_name, cuil, identification, to_char(birthdate,\'DD/MM/YYYY\') as birthdate, address, to_char(admission_date,\'DD/MM/YYYY\') as admission_date'));
+    .select(
+      knex.raw(
+        "id, name, last_name, cuil, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address, to_char(admission_date,'DD/MM/YYYY') as admission_date"
+      )
+    )
+    .where('enable', '=', true);
   return employees;
+}
+
+async function getEmployeesWithName(name) {
+  const items = await knex(TABLE_NAME)
+    .select(
+      knex.raw(
+        "id, name, last_name, cuil, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address, to_char(admission_date,'DD/MM/YYYY') as admission_date"
+      )
+    )
+    .where('name', 'ilike', `%${name}%`)
+    .andWhere('enable', '=', true);
+  return items;
+}
+
+async function deleteById(id) {
+  const columnInfo = await knex(TABLE_NAME).columnInfo();
+  const columns = Object.keys(columnInfo);
+
+  const [employee] = await knex(TABLE_NAME)
+    .where({id})
+    .update({
+      enable: false,
+      updated_at: new Date(),
+    }).returning(columns);
+  return employee;
 }
 
 module.exports = {
@@ -60,4 +90,6 @@ module.exports = {
   update,
   getById,
   getAll,
+  deleteById,
+  getEmployeesWithName,
 };
