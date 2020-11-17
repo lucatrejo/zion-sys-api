@@ -47,13 +47,46 @@ async function getById(id) {
 
 async function getAll() {
   const customer = await knex(TABLE_NAME)
-    .select();
+    .select(
+      knex.raw(
+        "id, name, last_name, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address"
+      )
+    )
+    .where('enable', '=', true);
   return customer;
 }
+
+async function getCustomerWithName(name) {
+  const items = await knex(TABLE_NAME)
+    .select(
+      knex.raw(
+        "id, name, last_name, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address"
+      )
+    )
+    .where('name', 'ilike', `%${name}%`)
+    .where('enable', '=', true);
+  return items;
+}
+
+async function deleteById(id) {
+  const columnInfo = await knex(TABLE_NAME).columnInfo();
+  const columns = Object.keys(columnInfo);
+
+  const [customer] = await knex(TABLE_NAME)
+    .where({id})
+    .update({
+      enable: false,
+      updated_at: new Date(),
+    }).returning(columns);
+  return customer;
+}
+
 
 module.exports = {
   insert,
   update,
   getById,
   getAll,
+  getCustomerWithName,
+  deleteById,
 };

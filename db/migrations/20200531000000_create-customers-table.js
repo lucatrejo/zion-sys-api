@@ -8,8 +8,11 @@ exports.up = async function up(knex) {
     table.string('name', 55).notNullable();
     table.string('last_name', 55).notNullable();
     table.string('identification', 30);
-    table.string('birthdate', 30);
+    table.date('birthdate');
     table.string('address', 55);
+    table.boolean('enable')
+      .notNullable()
+      .defaultTo(true);
     table
       .timestamp('created_at')
       .notNullable()

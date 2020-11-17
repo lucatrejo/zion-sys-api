@@ -1,4 +1,4 @@
-const { getById, getAll } = require('../repository');
+const { getById, getAll, getCustomerWithName } = require('../repository');
 const logger = require('../../../logger');
 
 async function getCustomer(req, res) {
@@ -30,7 +30,24 @@ async function getCustomers(req, res) {
   }
 }
 
+async function getCustomerByName(req, res) {
+  let customers = [];
+  const name = req.params.name;
+
+  try {
+    customers = await getCustomerWithName(name);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting customer' });
+  }
+
+  if (customers) {
+    return res.send({ customers });
+  }
+}
+
 module.exports = {
   getCustomer,
   getCustomers,
+  getCustomerByName,
 };

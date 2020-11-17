@@ -16,10 +16,10 @@ exports.seed = async function seed(knex) {
   await knex('employees').insert({
     name: 'Ricardo',
     cuil: '20339874322',
-    admission_date: '01/01/2019',
+    admission_date: new Date(),
     last_name: 'Mollo',
     identification: '33987432',
-    birthdate: '10/11/1980',
+    birthdate: new Date(),
     address: 'Salguero 876, Córdoba.',
     created_at: new Date(),
     updated_at: new Date(),

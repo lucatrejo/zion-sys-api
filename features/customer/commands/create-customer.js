@@ -3,6 +3,7 @@ const logger = require('../../../logger');
 
 async function createCustomer(req, res) {
   let customer = {};
+  const createSuccessMessage = "El cliente se creó con éxito.";
 
   try {
     customer = await insert(req.body);
@@ -12,16 +13,22 @@ async function createCustomer(req, res) {
   }
 
   if (customer.id) {
-    return res.send(customer);
+    return res.send({
+      success: true,
+      customer: { ...customer },
+      messages: { success: createSuccessMessage }
+    });
   }
 
-  const { code } = customer;
+  const { code } = employee;
 
   if(code === '23505') {
-    return res.status(400).send({ success: false, message: 'The name has already been taken.' });
+    const identification = 'El dni del cliente ya existe.';
+    return res.status(500).send({ success: false, messages: { errors: { identification }} });
   }
 
-  return res.status(500).send({ success: false, message: "error creating customer"});
+  const databaseError = 'Hubo un problema en la creación del cliente.';
+  return res.status(500).send({ success: false, messages: { errors: { databaseError }} });
 }
 
 module.exports = createCustomer;
