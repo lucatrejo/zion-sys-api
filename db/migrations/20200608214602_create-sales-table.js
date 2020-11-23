@@ -7,7 +7,7 @@ exports.up = async function up(knex) {
       .primary(['sale_job_pkey']);
       table.integer('employee_id').unsigned().notNullable();
       table.integer('customer_id').unsigned().notNullable();
-      table.timestamp('date').notNullable().defaultTo(knex.fn.now());
+      table.date('date').notNullable().defaultTo(knex.fn.now());
     table
       .timestamp('created_at')
       .notNullable()

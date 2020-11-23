@@ -12,6 +12,7 @@ const customersRoutes = require("../features/customer/routes");
 const employeesRoutes = require("../features/employee/routes");
 const providersRoutes = require("../features/provider/routes");
 const purchasesRoutes = require("../features/purchases/routes");
+const salesRoutes = require("../features/sales/routes");
 
 const logger = require('../logger');
 
@@ -43,5 +44,6 @@ router.use('/customers', customersRoutes);
 router.use('/employees', employeesRoutes);
 router.use('/providers', providersRoutes);
 router.use('/purchases', purchasesRoutes);
+router.use('/sales', salesRoutes);
 
 module.exports = router;
