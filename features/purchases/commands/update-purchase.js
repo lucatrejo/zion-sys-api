@@ -1,24 +1,26 @@
 const { update } = require('../repository');
-const logger = require('../../../logger');
 
 async function updatePurchase(req, res) {
-  let provider = {};
+  let purchase = {};
   const id = req.params.id;
-  logger.info("id: " + id);
-  
+  const createSuccessMessage = "La compra se actualizó con éxito.";
+
   try {
-    provider = await update({ ...req.body, id });
-    logger.info(provider);
+    purchase = await update({ ...req.body, id });
   } catch (error) {
-    logger.error(error);
-    provider = error;
+    purchase = error;
   }
 
-  if (provider.id) {
-    return res.send(provider);
+  if (purchase.id) {
+    return res.send({
+      success: true,
+      purchase: { ...purchase },
+      messages: { success: createSuccessMessage }
+    });
   }
-  
-  return res.status(500).send({ success: false, messages: 'error updating provider' });
+
+  const databaseError = 'Hubo un problema en la actualización de la compra.';
+  return res.status(500).send({ success: false, messages: { errors: { databaseError }} });
 }
 
 module.exports = updatePurchase;
