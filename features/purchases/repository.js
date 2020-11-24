@@ -86,7 +86,13 @@ async function getAll() {
   const purchases = await knex(TABLE_NAME)
     .join('employees', 'purchases.employee_id', 'employees.id')
     .join('providers', 'purchases.provider_id', 'providers.id')
-    .select(knex.raw('purchases.id, CONCAT(employees.name, \' \', employees.last_name) as employee_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date, employees.id as employee_id, providers.id as provider_id'));
+    .select(
+      knex.raw(
+        "purchases.id, CONCAT(employees.name, ' ', employees.last_name) as employee_name, providers.name as provider, to_char(purchases.date, 'DD/MM/YYYY') as date, employees.id as employee_id, providers.id as provider_id"
+      )
+    )
+    .where('purchases.enable', '=', true);
+
   return purchases;
 }
 
@@ -134,6 +140,17 @@ async function getItemsCriticalStockDb() {
   return topItems;
 }
 
+async function deleteById(id) {
+  const [purchase] = await knex(TABLE_NAME)
+    .where({ id })
+    .update({
+      enable: false,
+      updated_at: new Date(),
+    })
+    .returning(['id']);
+  return purchase;
+}
+
 module.exports = {
   insert,
   insertDetail,
@@ -145,5 +162,6 @@ module.exports = {
   getItemsCriticalStockDb,
   getAllMonth,
   getAllOrderByEmployee,
-  updateStock
+  updateStock,
+  deleteById,
 };

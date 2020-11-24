@@ -4,6 +4,8 @@ const router = require('express').Router();
 const createPurchase = require('./commands/create-purchase');
 const updatePurchase = require('./commands/update-purchase');
 const { getPurchase, getPurchases, getPurchasesWithDetail, getPurchaseDetail, getTopItems, getItemsCriticalStock, getPurchasesWithDetailMonth, getPurchasesWithDetailOrderEmployee} = require('./commands/get-purchase');
+const deletePurchase = require('./commands/delete-purchase');
+
 
 router.get('/top_items', wrap(getTopItems));
 router.get('/items_critical_stock', wrap(getItemsCriticalStock));
@@ -15,5 +17,6 @@ router.get('/:id/details', wrap(getPurchaseDetail));
 router.get('/details', wrap(getPurchasesWithDetail));
 router.get('/:id', wrap(getPurchase));
 router.get('/', wrap(getPurchases));
+router.delete('/:id', wrap(deletePurchase));
 
 module.exports = router;

@@ -8,6 +8,9 @@ exports.up = async function up(knex) {
       table.integer('employee_id').unsigned().notNullable();
       table.integer('provider_id').unsigned().notNullable();
       table.date('date').notNullable().defaultTo(knex.fn.now());
+    table.boolean('enable')
+      .notNullable()
+      .defaultTo(true);
     table
       .timestamp('created_at')
       .notNullable()
