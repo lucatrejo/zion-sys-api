@@ -1,10 +1,10 @@
-const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb, getAllMonth, getAllOrderByEmployee } = require('../repository');
+const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb, getAllMonth, getAllOrderByEmployee,getCountSalesForDay } = require('../repository');
 const logger = require('../../../logger');
 
 async function getSale(req, res) {
   let sale = {};
   const id = req.params.id;
-  
+
   try {
     sale = await getById({ id });
   } catch (error) {
@@ -18,7 +18,7 @@ async function getSale(req, res) {
 
 async function getSalesWithDetail(req, res) {
   let sales = [];
-  
+
   try {
     sales = await getAll();
 
@@ -84,7 +84,7 @@ async function getSalesWithDetailOrderEmployee(req, res) {
 
 async function getSales(req, res) {
   let sales = [];
-  
+
   try {
     sales = await getAll();
   } catch (error) {
@@ -99,7 +99,7 @@ async function getSales(req, res) {
 
 async function getTopItems(req, res) {
   let top_items = [];
-  
+
   try {
     top_items = await getTopItemsDb();
   } catch (error) {
@@ -111,10 +111,23 @@ async function getTopItems(req, res) {
     return res.send({ top_items });
   }
 }
+async function getCountsSaleForDay(req, res) {
+  let getCountSales = [];
 
+  try {
+    getCountSales = await getCountSalesForDay();
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, message: 'error getting top items' });
+  }
+
+  if (getCountSales) {
+    return res.send({ getCountSales });
+  }
+}
 async function getItemsCriticalStock(req, res) {
   let items = [];
-  
+
   try {
     items = await getItemsCriticalStockDb();
   } catch (error) {
@@ -151,5 +164,6 @@ module.exports = {
   getTopItems,
   getItemsCriticalStock,
   getSalesWithDetailMonth,
-  getSalesWithDetailOrderEmployee
+  getSalesWithDetailOrderEmployee,
+  getCountsSaleForDay,
 };

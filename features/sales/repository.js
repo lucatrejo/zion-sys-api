@@ -128,10 +128,18 @@ async function getTopItemsDb() {
     .join('items', 'sales_detail.item_id', 'items.id')
     .select('sales_detail.item_id', 'items.code', 'items.name', 'items.stock',knex.raw('COUNT(*)'))
     .orderBy('count', 'desc')
-    .groupByRaw('sales_detail.item_id, items.code, items.name, items.stock');
+    .groupByRaw('sales_detail.item_id, items.code, items.name, items.stock')
+    .limit(5);
   return topItems;
 }
+async function getCountSalesForDay() {
+  const countSaleForDay = await knex(TABLE_NAME)
+    .select(knex.raw('COUNT(*), to_char(date, \'DD/MM/YYYY\') as date'))
+    .orderBy('date', 'desc')
+    .groupByRaw('date');
 
+  return countSaleForDay;
+}
 async function getItemsCriticalStockDb() {
   const topItems = await knex('items')
     .select('id', 'code', 'name', 'stock', 'critical_stock')
@@ -161,4 +169,5 @@ module.exports = {
   getAllOrderByEmployee,
   updateStock,
   deleteById,
+  getCountSalesForDay,
 };

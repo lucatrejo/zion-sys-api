@@ -3,10 +3,10 @@ const router = require('express').Router();
 
 const createSale = require('./commands/create-sale');
 const updateSale = require('./commands/update-sale');
-const { getSale, getSales, getSalesWithDetail, getSaleDetail, getTopItems, getItemsCriticalStock, getSalesWithDetailMonth, getSalesWithDetailOrderEmployee} = require('./commands/get-sale');
+const { getSale, getSales, getSalesWithDetail, getSaleDetail, getTopItems, getItemsCriticalStock, getSalesWithDetailMonth, getSalesWithDetailOrderEmployee,getCountsSaleForDay} = require('./commands/get-sale');
 const deleteSale = require('./commands/delete-sale');
 
-
+router.get('/count_sales', wrap(getCountsSaleForDay));
 router.get('/top_items', wrap(getTopItems));
 router.get('/items_critical_stock', wrap(getItemsCriticalStock));
 router.get('/sales_month', wrap(getSalesWithDetailMonth));
