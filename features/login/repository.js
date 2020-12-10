@@ -6,7 +6,7 @@ const knexConfig = require('../../db/knexfile');
 const knex = Knex(knexConfig[process.env.NODE_ENV]);
 
 async function getUserForLoginData(email, password) {
-  const [user] = await knex('users')
+  const [user] = await knex('employees')
     .select()
     .where({ email })
     .limit(1);
@@ -24,13 +24,13 @@ async function getUserForLoginData(email, password) {
   return {
     id: user.id,
     username: user.email,
-    created_at: user.created_at,
+    role: user.role
   };
 }
 
 async function getUser(query) {
-  const [user] = await knex('users')
-    .select(['id', 'email', 'name', 'created_at'])
+  const [user] = await knex('employees')
+    .select(['id', 'email', 'name', 'role'])
     .where(query)
     .limit(1);
   return user;

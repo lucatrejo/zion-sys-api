@@ -6,6 +6,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+const cors = require("cors");
 
 const initAuthMiddleware = require('./features/login/init-auth-middleware');
 const indexRouter = require('./routes/index');
@@ -34,21 +35,30 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.enable('trust proxy');
+app.use(
+  cors({
+    origin: "http://localhost:3000", // allow to server to accept request from different origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true, // allow session cookie from browser to pass through
+  })
+);
+
+//app.enable('trust proxy');
 
 const { COOKIE_EXPIRATION_MS } = process.env;
 app.use(
   session({
-    store: redisStore,
+    //store: redisStore,
     secret: 'keyboard cat',
-    name: process.env.SESSION_COOKIE_NAME,
+    //name: process.env.SESSION_COOKIE_NAME,
     resave: false,
     saveUninitialized: true,
-    proxy: true,
+    //proxy: true,
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      expires: Date.now() + parseInt(COOKIE_EXPIRATION_MS, 10),
-      maxAge: parseInt(COOKIE_EXPIRATION_MS, 10),
+      //secure: true,
+      //expires: Date.now() + parseInt(COOKIE_EXPIRATION_MS, 10),
+      //maxAge: parseInt(COOKIE_EXPIRATION_MS, 10),
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );

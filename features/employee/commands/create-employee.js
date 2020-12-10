@@ -6,6 +6,7 @@ async function createEmployee(req, res) {
   const createSuccessMessage = "El empleado se creó con éxito.";
 
   try {
+    logger.info(req.body);
     employee = await insert(req.body);
   } catch (error) {
     logger.error(error);

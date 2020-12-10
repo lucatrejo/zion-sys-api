@@ -1,4 +1,4 @@
-const PASSWORD_MIN = 6;
+const PASSWORD_MIN = 1;
 const PASSWORD_MAX = 30;
 const PASSWORD_MAX_ERROR = `Password length must be less than or equal to ${PASSWORD_MAX} characters long`;
 const PASSWORD_MIN_ERROR = `Password length must be at least ${PASSWORD_MIN} characters long`;

@@ -25,8 +25,10 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/get-session', (req, res) => {
-  logger.info('get-session');
+  logger.info('----> INIT GET SESSION');
   logger.info(req);
+  logger.info(req.body);
+  logger.info(req.user);
   if (req.user && req.isAuthenticated()) {
     return res.json({ success: true, userInfo: req.user });
   }

@@ -1,10 +1,13 @@
 const debug = require('debug')('express:login');
 const passport = require('passport');
+const logger = require('../../../logger');
+
 
 const { USERNAME_PASSWORD_COMBINATION_ERROR, INTERNAL_SERVER_ERROR } = require('../constants');
 
 function login(req, res, next) {
-  debug('login');
+  logger.info("INIT LOGIN");
+  logger.info(req);
   return passport.authenticate('local', (error, user) => {
     if (error || !user) {
       return res.status(401).send({
@@ -24,6 +27,7 @@ function login(req, res, next) {
           },
         });
       }
+
       return next();
     });
   })(req, res, next);

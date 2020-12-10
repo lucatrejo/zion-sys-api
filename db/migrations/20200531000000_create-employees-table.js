@@ -6,6 +6,7 @@ exports.up = async function up(knex) {
       .notNullable()
       .primary(['employee_job_pkey']);
     table.string('name', 55).notNullable();
+    table.string('role', 20).notNullable();
     table.string('cuil', 55).notNullable();
     table.date('admission_date')
       .notNullable()
@@ -14,6 +15,8 @@ exports.up = async function up(knex) {
     table.string('identification', 30).notNullable();
     table.date('birthdate');
     table.string('address', 55);
+    table.string('email', 60).notNullable();
+    table.string('password', 60).notNullable();
     table.boolean('enable')
       .notNullable()
       .defaultTo(true);
@@ -27,6 +30,7 @@ exports.up = async function up(knex) {
       .defaultTo(knex.fn.now());
 
     table.unique('identification');
+    table.unique('email');
   });
 };
 
