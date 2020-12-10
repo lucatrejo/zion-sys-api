@@ -104,6 +104,13 @@ async function getAllMonth() {
     .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date'));
   return purchases;
 }
+async function getAllMonths() {
+  const purchases = await knex(TABLE_NAME)
+    .join('employees', 'purchases.employee_id', 'employees.id')
+    .join('providers', 'purchases.provider_id', 'providers.id')
+    .select(knex.raw('purchases.id, employees.name as employee_name, employees.last_name as employee_last_name, providers.name as provider, to_char(purchases.date, \'DD/MM/YYYY\') as date'));
+  return purchases;
+}
 
 async function getAllOrderByEmployee() {
   const purchases = await knex(TABLE_NAME)
@@ -164,4 +171,5 @@ module.exports = {
   getAllOrderByEmployee,
   updateStock,
   deleteById,
+  getAllMonths,
 };

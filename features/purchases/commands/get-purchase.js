@@ -1,10 +1,10 @@
-const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb, getAllMonth, getAllOrderByEmployee } = require('../repository');
+const { getById, getAll, getDetailById, getTopItemsDb, getItemsCriticalStockDb, getAllMonth, getAllOrderByEmployee,getAllMonths } = require('../repository');
 const logger = require('../../../logger');
 
 async function getPurchase(req, res) {
   let purchase = {};
   const id = req.params.id;
-  
+
   try {
     purchase = await getById({ id });
   } catch (error) {
@@ -18,7 +18,7 @@ async function getPurchase(req, res) {
 
 async function getPurchasesWithDetail(req, res) {
   let purchases = [];
-  
+
   try {
     purchases = await getAll();
 
@@ -43,6 +43,27 @@ async function getPurchasesWithDetailMonth(req, res) {
 
   try {
     purchases = await getAllMonth();
+
+    for (let purchase of purchases) {
+      let details = [];
+      details = await getDetailById(purchase.id);
+      purchase.details = details;
+    }
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, message: 'error getting purchases' });
+  }
+
+  if (purchases) {
+    return res.send({ purchases });
+  }
+}
+async function getPurchasesWithDetailMonths(req, res) {
+  let purchases = [];
+
+  try {
+    purchases = await getAllMonths();
 
     for (let purchase of purchases) {
       let details = [];
@@ -84,7 +105,7 @@ async function getPurchasesWithDetailOrderEmployee(req, res) {
 
 async function getPurchases(req, res) {
   let purchases = [];
-  
+
   try {
     purchases = await getAll();
   } catch (error) {
@@ -99,7 +120,7 @@ async function getPurchases(req, res) {
 
 async function getTopItems(req, res) {
   let top_items = [];
-  
+
   try {
     top_items = await getTopItemsDb();
   } catch (error) {
@@ -114,7 +135,7 @@ async function getTopItems(req, res) {
 
 async function getItemsCriticalStock(req, res) {
   let items = [];
-  
+
   try {
     items = await getItemsCriticalStockDb();
   } catch (error) {
@@ -151,5 +172,6 @@ module.exports = {
   getTopItems,
   getItemsCriticalStock,
   getPurchasesWithDetailMonth,
-  getPurchasesWithDetailOrderEmployee
+  getPurchasesWithDetailOrderEmployee,
+  getPurchasesWithDetailMonths,
 };
