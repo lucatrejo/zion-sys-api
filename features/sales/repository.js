@@ -128,8 +128,7 @@ async function getTopItemsDb() {
     .join('items', 'sales_detail.item_id', 'items.id')
     .select('sales_detail.item_id', 'items.code', 'items.name', 'items.stock',knex.raw('COUNT(*)'))
     .orderBy('count', 'desc')
-    .groupByRaw('sales_detail.item_id, items.code, items.name, items.stock')
-    .limit(5);
+    .groupByRaw('sales_detail.item_id, items.code, items.name, items.stock');
   return topItems;
 }
 async function getCountSalesForDay() {
