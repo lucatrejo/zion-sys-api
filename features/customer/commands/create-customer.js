@@ -1,4 +1,5 @@
 const { insert } = require('../repository');
+const { insertAccount } = require('../repositoryAccount');
 const logger = require('../../../logger');
 
 async function createCustomer(req, res) {
@@ -13,6 +14,8 @@ async function createCustomer(req, res) {
   }
 
   if (customer.id) {
+    await insertAccount(customer.id);
+
     return res.send({
       success: true,
       customer: { ...customer },
