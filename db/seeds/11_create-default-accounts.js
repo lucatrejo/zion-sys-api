@@ -13,6 +13,7 @@ exports.seed = async function seed(knex) {
     amount: 40.40,
     status: 'debtor',
     customer_id: 2,
+    first_debt_date: new Date(),
     created_at: new Date(),
     updated_at: new Date(),
   });
