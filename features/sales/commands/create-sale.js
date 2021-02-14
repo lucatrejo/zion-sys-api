@@ -20,7 +20,7 @@ async function createSale(req, res) {
 
     if (req.body.credit === true) {
       accountId = await updateAccount(req.body, totalAmount);
-      await insertDetailAccount(purchase.id, accountId, 'owed');
+      await insertDetailAccount(purchase.id, accountId[0].id, 'owed');
     }
   } catch (error) {
     logger.error(error);
