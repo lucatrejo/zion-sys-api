@@ -92,7 +92,7 @@ async function getAccount(customerId) {
 }
 
 async function getDetailAccount(accountId) {
-  const [customer] = await knex(TABLE_NAME_DETAIL_ACCOUNT)
+  const customer = await knex(TABLE_NAME_DETAIL_ACCOUNT)
     .select()
     .where('account_id', accountId);
   return customer;
