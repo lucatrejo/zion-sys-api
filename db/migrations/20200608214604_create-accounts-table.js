@@ -6,9 +6,13 @@ exports.up = async function up(knex) {
       .notNullable()
       .primary(['account_job_pkey']);
 
-      table.decimal('amount').notNullable();
-      table.string('status');
-      table.integer('customer_id').unsigned().notNullable();
+    table.decimal('amount').notNullable();
+    table.string('status');
+    table
+      .integer('customer_id')
+      .unsigned()
+      .notNullable();
+    table.date('first_debt_date');
     table
       .timestamp('created_at')
       .notNullable()
@@ -18,7 +22,10 @@ exports.up = async function up(knex) {
       .notNullable()
       .defaultTo(knex.fn.now());
 
-    table.foreign('customer_id').references('id').inTable('customers');
+    table
+      .foreign('customer_id')
+      .references('id')
+      .inTable('customers');
   });
 };
 

@@ -2,7 +2,6 @@ const knex = require('../../db');
 const logger = require('../../logger');
 
 const TABLE_NAME = 'customers';
-
 async function insert({ name, last_name, identification, birthdate, address }) {
   const columnInfo = await knex(TABLE_NAME).columnInfo();
   const columns = Object.keys(columnInfo);
@@ -46,10 +45,11 @@ async function getById(id) {
 }
 
 async function getAll() {
-  const customer = await knex(TABLE_NAME)
+  const customer = await knex('customers')
+    .join('accounts', 'accounts.customer_id', 'customers.id')
     .select(
       knex.raw(
-        "id, name, last_name, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address"
+        "customers.id, customers.name, customers.last_name, customers.identification, to_char(customers.birthdate,'DD/MM/YYYY') as birthdate, customers.address,to_char(accounts.first_debt_date,'DD/MM/YYYY') as first_debt_date"
       )
     )
     .where('enable', '=', true);
