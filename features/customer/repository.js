@@ -2,6 +2,9 @@ const knex = require('../../db');
 const logger = require('../../logger');
 
 const TABLE_NAME = 'customers';
+const TABLE_NAME_ACCOUNT = 'accounts';
+const TABLE_NAME_DETAIL_ACCOUNT = 'accounts_detail';
+
 async function insert({ name, last_name, identification, birthdate, address }) {
   const columnInfo = await knex(TABLE_NAME).columnInfo();
   const columns = Object.keys(columnInfo);
@@ -49,7 +52,7 @@ async function getAll() {
     .join('accounts', 'accounts.customer_id', 'customers.id')
     .select(
       knex.raw(
-        "customers.id, customers.name, customers.last_name, customers.identification, to_char(customers.birthdate,'DD/MM/YYYY') as birthdate, customers.address,to_char(accounts.first_debt_date,'DD/MM/YYYY') as first_debt_date"
+        "customers.id, customers.name, customers.last_name, customers.identification, to_char(customers.birthdate,'DD/MM/YYYY') as birthdate, customers.address, to_char(accounts.first_debt_date,'DD/MM/YYYY') as first_debt_date"
       )
     )
     .where('enable', '=', true);
@@ -80,7 +83,20 @@ async function deleteById(id) {
     }).returning(columns);
   return customer;
 }
+async function getAccount(customerId) {
+  const [customer] = await knex(TABLE_NAME_ACCOUNT)
+    .select()
+    .where('customer_id', customerId)
+    .limit(1);
+  return customer;
+}
 
+async function getDetailAccount(accountId) {
+  const [customer] = await knex(getDetailAccount())
+    .select()
+    .where('account_id', accountId);
+  return customer;
+}
 
 module.exports = {
   insert,
@@ -89,4 +105,6 @@ module.exports = {
   getAll,
   getCustomerWithName,
   deleteById,
+  getAccount,
+  getDetailAccount,
 };
