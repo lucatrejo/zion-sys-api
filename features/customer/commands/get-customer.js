@@ -48,11 +48,20 @@ async function getCustomerByName(req, res) {
 async function getAccounts(req, res) {
   let account = {};
   const { id } = req.params;
+  let detailsSale = [];
+  let totalAmount = 0;
 
   try {
     account = await getAccount(id);
     let details = [];
     details = await getDetailAccount(account.id);
+    for (const detail of details) {
+      detailsSale = await getSaleDetailsBySaleId(details.sale_id);
+      for (const detailSale of detailsSale) {
+        totalAmount += detailSale.unit_price * detailSale.quantity;
+      }
+      detail.totalAmount = totalAmount;
+    }
     account.details = details;
   } catch (error) {
     logger.error(error);
