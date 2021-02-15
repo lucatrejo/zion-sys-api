@@ -10,14 +10,14 @@ async function insert({ name, last_name, identification, birthdate, address }) {
   const columns = Object.keys(columnInfo);
 
   const [customer] = await knex(TABLE_NAME)
-  .insert({
-    name: name,
-    last_name: last_name,
-    identification: identification,
-    birthdate: birthdate,
-    address: address
-  })
-  .returning(columns);
+    .insert({
+      name,
+      last_name,
+      identification,
+      birthdate,
+      address,
+    })
+    .returning(columns);
   return customer;
 }
 
@@ -26,13 +26,13 @@ async function update({ id, name, last_name, identification, birthdate, address 
   const columns = Object.keys(columnInfo);
 
   const [customer] = await knex(TABLE_NAME)
-    .where({id})
+    .where({ id })
     .update({
-      name: name,
-      last_name: last_name,
-      identification: identification,
-      birthdate: birthdate,
-      address: address,
+      name,
+      last_name,
+      identification,
+      birthdate,
+      address,
       updated_at: new Date(),
     })
     .returning(columns);
@@ -76,11 +76,12 @@ async function deleteById(id) {
   const columns = Object.keys(columnInfo);
 
   const [customer] = await knex(TABLE_NAME)
-    .where({id})
+    .where({ id })
     .update({
       enable: false,
       updated_at: new Date(),
-    }).returning(columns);
+    })
+    .returning(columns);
   return customer;
 }
 async function getAccount(customerId) {
@@ -97,6 +98,54 @@ async function getDetailAccount(accountId) {
     .where('account_id', accountId);
   return customer;
 }
+async function getDetailAccountById(detailID) {
+  const [customer] = await knex(TABLE_NAME_DETAIL_ACCOUNT)
+    .select()
+    .where(detailID)
+    .limit(1);
+  return customer;
+}
+
+async function updateAccount(id, amount) {
+  let accountId;
+  let totalAmount;
+  if (amount !== 0) {
+    const account = await knex(TABLE_NAME_ACCOUNT)
+      .select('status', 'amount')
+      .where(id);
+    totalAmount = account.amount - amount;
+    accountId = await knex(TABLE_NAME_ACCOUNT)
+      .where(id)
+      .update({
+        amount: totalAmount,
+      })
+      .returning(['id']);
+  } else {
+    accountId = await knex(TABLE_NAME_ACCOUNT)
+      .where(id)
+      .update({
+        amount,
+        status: 'up_to_date',
+        first_debt_date: null,
+      })
+      .returning(['id']);
+  }
+  return accountId;
+}
+async function updateAccountDetail(accountId, status) {
+  await knex(TABLE_NAME_DETAIL_ACCOUNT)
+    .where('account_id', accountId)
+    .update({
+      status,
+    });
+}
+async function updateAccountDetailById(id, status) {
+  await knex(TABLE_NAME_DETAIL_ACCOUNT)
+    .where(id)
+    .update({
+      status,
+    });
+}
 
 module.exports = {
   insert,
@@ -107,4 +156,8 @@ module.exports = {
   deleteById,
   getAccount,
   getDetailAccount,
+  updateAccount,
+  updateAccountDetail,
+  getDetailAccountById,
+  updateAccountDetailById,
 };

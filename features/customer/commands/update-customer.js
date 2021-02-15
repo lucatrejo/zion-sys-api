@@ -1,4 +1,6 @@
-const { update } = require('../repository');
+const { update, updateAccount, updateAccountDetail , getDetailAccountById,updateAccountDetailById} = require('../repository');
+const { getSaleDetailsBySaleId} = require('../../sales/repository');
+
 const logger = require('../../../logger');
 
 async function updateCustomer(req, res) {
@@ -29,5 +31,60 @@ async function updateCustomer(req, res) {
   const databaseError = 'Hubo un problema en la actualización del cliente.';
   return res.status(500).send({ success: false, messages: { errors: { databaseError }} });
 }
+async function payTotalDebt(req, res) {
+  let accountId = 0;
+  const { id } = req.params;
+  const editMessage = 'El cliente saldo la deuda';
 
-module.exports = updateCustomer;
+  try {
+    accountId = await updateAccount(id, 0);
+    await updateAccountDetail(accountId[0].id, 'paid');
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting Accounts' });
+  }
+
+  return res.send({
+    success: true,
+    customer: { id },
+    messages: { success: editMessage },
+  });
+}
+
+async function payPartialDebt(req, res) {
+  const { detailId } = req.params;
+  const { idAccount } = req.params;
+
+  const editMessage = 'El cliente saldo la deuda parcial';
+
+  let detailAccount;
+  let detailSale = [];
+  let totalAmount = 0;
+
+  try {
+    detailAccount = await getDetailAccountById(detailId);
+
+    detailSale = await getSaleDetailsBySaleId(detailAccount.sale_id);
+
+    for (const detail of detailSale) {
+      totalAmount += detail.unit_price * detail.quantity;
+    }
+    await updateAccount(idAccount, totalAmount);
+    await updateAccountDetailById(detailId, 'paid');
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({successgetAccounts: false, messages: 'error getting Accounts'});
+  }
+
+  return res.send({
+    success: true,
+    customer: { detailId },
+    messages: { success: editMessage },
+  });
+}
+
+module.exports = {
+  updateCustomer,
+  payTotalDebt,
+  payPartialDebt,
+};

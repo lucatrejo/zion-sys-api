@@ -132,6 +132,12 @@ async function getDetailById(id) {
 
   return details;
 }
+async function getSaleDetailsBySaleId(saleId) {
+  const customer = await knex(TABLE_NAME_DETAIL)
+    .select()
+    .where('sale_id', saleId);
+  return customer;
+}
 
 async function getTopItemsDb() {
   const topItems = await knex('sales_detail')
@@ -215,4 +221,5 @@ module.exports = {
   getCountSalesForDay,
   updateAccount,
   insertDetailAccount,
+  getSaleDetailsBySaleId,
 };
