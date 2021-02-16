@@ -177,11 +177,11 @@ async function updateAccount({ customer_id }, totalAmount) {
   const account = await knex(TABLE_NAME_ACCOUNT)
     .select('status', 'amount')
     .where('customer_id', customer_id);
-  if (account.status === 'debtor') {
+  if (account[0].status === 'debtor') {
     accountId = await knex(TABLE_NAME_ACCOUNT)
       .where('customer_id', customer_id)
       .update({
-        amount: totalAmount + account.amount,
+        amount: totalAmount + account[0].amount,
       })
       .returning(['id']);
   } else {

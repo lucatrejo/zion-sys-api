@@ -102,22 +102,22 @@ async function getDetailAccount(accountId) {
     .where('account_id', accountId);
   return customer;
 }
-async function getDetailAccountById(detailID) {
+async function getDetailAccountById(id) {
   const [customer] = await knex(TABLE_NAME_DETAIL_ACCOUNT)
     .select()
-    .where(detailID)
+    .where(id)
     .limit(1);
   return customer;
 }
 
 async function updateAccount(id, amount) {
-  let accountId;
+  let accountId = 0;
   let totalAmount;
   if (amount !== 0) {
     const account = await knex(TABLE_NAME_ACCOUNT)
       .select('status', 'amount')
       .where(id);
-    totalAmount = account.amount - amount;
+    totalAmount = account[0].amount - amount;
     accountId = await knex(TABLE_NAME_ACCOUNT)
       .where(id)
       .update({
