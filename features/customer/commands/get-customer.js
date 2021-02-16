@@ -1,5 +1,6 @@
 const { getById, getAll, getCustomerWithName,getAccount,getDetailAccount } = require('../repository');
 const logger = require('../../../logger');
+const { getSaleDetailsBySaleId } = require('../../sales/repository');
 
 async function getCustomer(req, res) {
   let customer = {};
@@ -57,7 +58,7 @@ async function getAccounts(req, res) {
     details = await getDetailAccount(account.id);
     account.details = details;
     for (const detail of details) {
-      detailsSale = await getSaleDetailsBySaleId(details.sale_id);
+      detailsSale = await getSaleDetailsBySaleId(detail.sale_id);
       for (const detailSale of detailsSale) {
         totalAmount += detailSale.unit_price * detailSale.quantity;
       }
