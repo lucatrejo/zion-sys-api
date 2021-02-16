@@ -1,4 +1,6 @@
 const knex = require('../../db');
+const logger = require('../../logger');
+
 
 const TABLE_NAME = 'sales';
 const TABLE_NAME_DETAIL = 'sales_detail';
@@ -177,11 +179,16 @@ async function updateAccount({ customer_id }, totalAmount) {
   const account = await knex(TABLE_NAME_ACCOUNT)
     .select('status', 'amount')
     .where('customer_id', customer_id);
+
+  logger.info(account[0]);
   if (account[0].status === 'debtor') {
+    logger.info("CALCULATE");
+    logger.info(totalAmount + Number(account[0].amount));
+    logger.info("END");
     accountId = await knex(TABLE_NAME_ACCOUNT)
       .where('customer_id', customer_id)
       .update({
-        amount: totalAmount + account[0].amount,
+        amount: totalAmount +  Number(account[0].amount),
       })
       .returning(['id']);
   } else {

@@ -55,13 +55,20 @@ async function getAccounts(req, res) {
   try {
     account = await getAccount(id);
     let details = [];
+
     details = await getDetailAccount(account.id);
+
+
     account.details = details;
     for (const detail of details) {
       detailsSale = await getSaleDetailsBySaleId(detail.sale_id);
+      logger.info(detailsSale);
+
+      totalAmount = 0;
       for (const detailSale of detailsSale) {
         totalAmount += detailSale.unit_price * detailSale.quantity;
       }
+
       detail.totalAmount = totalAmount;
     }
   } catch (error) {

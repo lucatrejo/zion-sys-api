@@ -117,7 +117,7 @@ async function updateAccount(id, amount) {
     const account = await knex(TABLE_NAME_ACCOUNT)
       .select('status', 'amount')
       .where(id);
-    totalAmount = account[0].amount - amount;
+    totalAmount = Number(account[0].amount) - amount;
     accountId = await knex(TABLE_NAME_ACCOUNT)
       .where(id)
       .update({
