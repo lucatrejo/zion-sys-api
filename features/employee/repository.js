@@ -102,6 +102,17 @@ async function getEmployeesWithName(name) {
     .andWhere('enable', '=', true);
   return items;
 }
+async function getEmployeesWithLastName(last_name) {
+  const items = await knex(TABLE_NAME)
+    .select(
+      knex.raw(
+        "id, name, last_name, cuil, email, role, identification, to_char(birthdate,'DD/MM/YYYY') as birthdate, address, to_char(admission_date,'DD/MM/YYYY') as admission_date"
+      )
+    )
+    .where('last_name', 'ilike', `%${last_name}%`)
+    .andWhere('enable', '=', true);
+  return items;
+}
 
 async function deleteById(id) {
   const columnInfo = await knex(TABLE_NAME).columnInfo();
@@ -123,4 +134,5 @@ module.exports = {
   getAll,
   deleteById,
   getEmployeesWithName,
+  getEmployeesWithLastName,
 };

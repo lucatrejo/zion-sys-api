@@ -1,4 +1,4 @@
-const { getById, getAll, getCustomerWithName,getAccount,getDetailAccount } = require('../repository');
+const { getById, getAll, getCustomerWithName,getAccount,getDetailAccount,getCustomerWithLastName } = require('../repository');
 const logger = require('../../../logger');
 const { getSaleDetailsBySaleId } = require('../../sales/repository');
 
@@ -37,6 +37,21 @@ async function getCustomerByName(req, res) {
 
   try {
     customers = await getCustomerWithName(name);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting customer' });
+  }
+
+  if (customers) {
+    return res.send({ customers });
+  }
+}
+async function getCustomerByLastName(req, res) {
+  let customers = [];
+  const {last_name} = req.params;
+
+  try {
+    customers = await getCustomerWithLastName(last_name);
   } catch (error) {
     logger.error(error);
     return res.status(500).send({ success: false, messages: 'error getting customer' });
@@ -86,4 +101,5 @@ module.exports = {
   getCustomers,
   getCustomerByName,
   getAccounts,
+  getCustomerByLastName
 };
