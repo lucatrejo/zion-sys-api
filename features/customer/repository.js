@@ -96,7 +96,7 @@ async function getDetailAccount(accountId) {
   const customer = await knex(TABLE_NAME_DETAIL_ACCOUNT)
     .select(
       knex.raw(
-        "sale_id, to_char(created_at,'DD/MM/YYYY') as date, status"
+        "id, sale_id, to_char(created_at,'DD/MM/YYYY') as date, status"
       )
     )
     .where('account_id', accountId);
