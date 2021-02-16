@@ -81,7 +81,6 @@ async function payPartialDebt(req, res) {
     } else {
       await updateAccount({id}, 0);
     }
-    await updateAccount({ id }, totalAmount);
     id = detailId;
 
     await updateAccountDetailById({ id }, 'paid');
