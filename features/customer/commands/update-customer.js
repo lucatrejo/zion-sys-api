@@ -1,4 +1,4 @@
-const { update, updateAccount, updateAccountDetail , getDetailAccountById,updateAccountDetailById} = require('../repository');
+const { update, updateAccount, updateAccountDetail , getDetailAccountById,updateAccountDetailById,getDetailAccount} = require('../repository');
 const { getSaleDetailsBySaleId} = require('../../sales/repository');
 
 const logger = require('../../../logger');
@@ -58,10 +58,10 @@ async function payPartialDebt(req, res) {
   const editMessage = 'El cliente saldo la deuda parcial';
 
   let detailAccount;
+  let detailsAccount = [];
+
   let detailSale = [];
   let totalAmount = 0;
-
-
 
   try {
     id = detailId;
@@ -73,7 +73,14 @@ async function payPartialDebt(req, res) {
       totalAmount += detail.unit_price * detail.quantity;
     }
     id = idAccount;
-
+    detailsAccount = await getDetailAccount(detailAccount.account_id);
+    detailsAccount = detailsAccount.filter(detail => detail.status === 'owed');
+    id = idAccount;
+    if (detailsAccount.length > 1) {
+      await updateAccount({id}, totalAmount);
+    } else {
+      await updateAccount({id}, 0);
+    }
     await updateAccount({ id }, totalAmount);
     id = detailId;
 
