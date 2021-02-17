@@ -40,6 +40,7 @@ async function getPurchasesWithDetail(req, res) {
 
 async function getPurchasesWithDetailMonth(req, res) {
   let purchases = [];
+  let result = [];
 
   try {
     purchases = await getAllMonth();
@@ -47,7 +48,16 @@ async function getPurchasesWithDetailMonth(req, res) {
     for (let purchase of purchases) {
       let details = [];
       details = await getDetailById(purchase.id);
-      purchase.details = details;
+
+      for (let detail of details) {
+        result.push({
+          name: detail.name,
+          quantity: detail.quantity,
+          unit_price: detail.unit_price,
+          provider: purchase.provider,
+          date: purchase.date,
+        })
+      }
     }
 
   } catch (error) {
@@ -55,8 +65,8 @@ async function getPurchasesWithDetailMonth(req, res) {
     return res.status(500).send({ success: false, message: 'error getting purchases' });
   }
 
-  if (purchases) {
-    return res.send({ purchases });
+  if (result) {
+    return res.send({ result });
   }
 }
 async function getPurchasesWithDetailMonths(req, res) {
@@ -83,6 +93,7 @@ async function getPurchasesWithDetailMonths(req, res) {
 
 async function getPurchasesWithDetailOrderEmployee(req, res) {
   let purchases = [];
+  let result = [];
 
   try {
     purchases = await getAllOrderByEmployee();
@@ -90,7 +101,16 @@ async function getPurchasesWithDetailOrderEmployee(req, res) {
     for (let purchase of purchases) {
       let details = [];
       details = await getDetailById(purchase.id);
-      purchase.details = details;
+
+      for (let detail of details) {
+        result.push({
+          employee_name: purchase.employee_name + ", " + purchase.employee_last_name,
+          date: purchase.date,
+          item: detail.name,
+          quantity: detail.quantity,
+          unit_price: detail.unit_price,
+        })
+      }
     }
 
   } catch (error) {
@@ -98,8 +118,8 @@ async function getPurchasesWithDetailOrderEmployee(req, res) {
     return res.status(500).send({ success: false, message: 'error getting purchases' });
   }
 
-  if (purchases) {
-    return res.send({ purchases });
+  if (result) {
+    return res.send({ result });
   }
 }
 
