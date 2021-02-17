@@ -40,6 +40,7 @@ async function getSalesWithDetail(req, res) {
 
 async function getSalesWithDetailMonth(req, res) {
   let sales = [];
+  let result = [];
 
   try {
     sales = await getAllMonth();
@@ -47,7 +48,16 @@ async function getSalesWithDetailMonth(req, res) {
     for (let sale of sales) {
       let details = [];
       details = await getDetailById(sale.id);
-      sale.details = details;
+
+      for(let detail of details) {
+        result.push({
+          item: detail.name,
+          quantity: detail.quantity,
+          unit_price: detail.unit_price,
+          customer: sale.customer,
+          date: sale.date,
+        })
+      }
     }
 
   } catch (error) {
@@ -55,13 +65,14 @@ async function getSalesWithDetailMonth(req, res) {
     return res.status(500).send({ success: false, message: 'error getting sales' });
   }
 
-  if (sales) {
-    return res.send({ sales });
+  if (result) {
+    return res.send({ result });
   }
 }
 
 async function getSalesWithDetailOrderEmployee(req, res) {
   let sales = [];
+  let result = [];
 
   try {
     sales = await getAllOrderByEmployee();
@@ -69,7 +80,15 @@ async function getSalesWithDetailOrderEmployee(req, res) {
     for (let sale of sales) {
       let details = [];
       details = await getDetailById(sale.id);
-      sale.details = details;
+      for(let detail of details) {
+        result.push({
+          employee: sale.employee_name + ", " + sale.employee_last_name,
+          date: sale.date,
+          item: detail.name,
+          quantity: detail.quantity,
+          unit_price: detail.unit_price,
+        })
+      }
     }
 
   } catch (error) {
@@ -77,8 +96,8 @@ async function getSalesWithDetailOrderEmployee(req, res) {
     return res.status(500).send({ success: false, message: 'error getting sales' });
   }
 
-  if (sales) {
-    return res.send({ sales });
+  if (result) {
+    return res.send({ result });
   }
 }
 
