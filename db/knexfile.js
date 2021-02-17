@@ -1,5 +1,5 @@
 require('dotenv').config({
-  path: `../env-files/${process.env.NODE_ENV || 'development'}.env`,
+  path: `../env-files/${process.env.NODE_ENV || 'production'}.env`,
 });
 
 global.Promise = require('bluebird');
