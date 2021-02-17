@@ -1,4 +1,4 @@
-const { getById, getAll, getEmployeesWithName } = require('../repository');
+const { getById, getAll, getEmployeesWithName,getEmployeesWithLastName } = require('../repository');
 const logger = require('../../../logger');
 
 async function getEmployee(req, res) {
@@ -45,9 +45,25 @@ async function getEmployeeByName(req, res) {
     return res.send({ employees });
   }
 }
+async function getEmployeeByLastName(req, res) {
+  let employees = [];
+  const { last_name } = req.params;
+
+  try {
+    employees = await getEmployeesWithLastName(last_name);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting employee' });
+  }
+
+  if (employees) {
+    return res.send({ employees });
+  }
+}
 
 module.exports = {
   getEmployee,
   getEmployees,
   getEmployeeByName,
+  getEmployeeByLastName,
 };
