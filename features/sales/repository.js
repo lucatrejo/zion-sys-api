@@ -174,7 +174,7 @@ async function deleteById(id) {
   return purchase;
 }
 
-async function updateAccount({ customer_id }, totalAmount) {
+async function updateAccount({ customer_id }, totalAmount, date) {
   let accountId;
   const account = await knex(TABLE_NAME_ACCOUNT)
     .select('status', 'amount')
@@ -197,7 +197,7 @@ async function updateAccount({ customer_id }, totalAmount) {
       .update({
         amount: totalAmount,
         status: 'debtor',
-        first_debt_date: knex.fn.now(),
+        first_debt_date: date,
       })
       .returning(['id']);
   }
