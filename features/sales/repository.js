@@ -204,11 +204,13 @@ async function updateAccount({ customer_id }, totalAmount) {
   return accountId;
 }
 
-async function insertDetailAccount(saleId, accountId, statusDetail) {
+async function insertDetailAccount(saleId, accountId, statusDetail, date) {
   await knex(TABLE_NAME_DETAIL_ACCOUNT).insert({
     sale_id: saleId,
     account_id: accountId,
     status: statusDetail,
+    created_at: date,
+
   });
 }
 

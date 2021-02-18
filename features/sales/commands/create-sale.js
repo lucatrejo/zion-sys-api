@@ -21,7 +21,7 @@ async function createSale(req, res) {
     if (req.body.credit === true) {
       logger.info(totalAmount);
       accountId = await updateAccount(req.body, totalAmount);
-      await insertDetailAccount(purchase.id, accountId[0].id, 'owed');
+      await insertDetailAccount(purchase.id, accountId[0].id, 'owed', req.body.date);
     }
   } catch (error) {
     logger.error(error);
