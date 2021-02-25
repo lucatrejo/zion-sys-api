@@ -116,13 +116,30 @@ async function getUpToDate(req, res) {
 }
 
 async function getDebtors(req, res) {
-  logger.info("LLEGO");
+  logger.info("MOROSO");
   let result = [];
 
   try {
-    logger.info("LLEGO");
+    accounts = await getAccountsMorosos();
 
-    result = await getAccountsDebtor();
+    for (const account of accounts) {
+      let date = account.first_debt_date;
+
+      logger.info(date);
+      logger.info(new Date());
+
+      var dateDiff = new Date().getTime() - date.getTime();
+      var daysDiff = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+      logger.info(daysDiff);
+
+      if (daysDiff <= 45) {
+        result.push(account);
+      }
+    }
+
+
+
+    logger.info(result);
 
   } catch (error) {
     logger.error(error);
