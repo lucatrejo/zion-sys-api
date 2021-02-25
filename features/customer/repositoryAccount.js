@@ -17,7 +17,6 @@ async function insertAccount(customerId) {
   return customer;
 }
 
-
 module.exports = {
   insertAccount,
 };

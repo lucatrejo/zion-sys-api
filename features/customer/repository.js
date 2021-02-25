@@ -103,6 +103,45 @@ async function getAccount(customerId) {
   return customer;
 }
 
+async function getAccountsUpToDate() {
+  const result = await knex(TABLE_NAME_ACCOUNT)
+    .join('customers', 'accounts.customer_id', 'customers.id')
+    .select(
+      knex.raw(
+        "customers.id, customers.name, customers.last_name, customers.identification, accounts.amount"
+      )
+    )
+    .where('enable', '=', true)
+    .where('accounts.status', '=', 'up_to_date');
+  return result;
+}
+
+async function getAccountsDebtor() {
+  const result = await knex(TABLE_NAME_ACCOUNT)
+    .join('customers', 'accounts.customer_id', 'customers.id')
+    .select(
+      knex.raw(
+        "customers.id, customers.name, customers.last_name, customers.identification, accounts.amount"
+      )
+    )
+    .where('enable', '=', true)
+    .where('accounts.status', '=', 'debtor');
+  return result;
+}
+
+async function getAccountsMorosos() {
+  const result = await knex(TABLE_NAME_ACCOUNT)
+    .join('customers', 'accounts.customer_id', 'customers.id')
+    .select(
+      knex.raw(
+        "customers.id, customers.name, customers.last_name, customers.identification, accounts.amount, accounts.first_debt_date"
+      )
+    )
+    .where('enable', '=', true)
+    .where('accounts.status', '=', 'debtor');
+  return result;
+}
+
 async function getDetailAccount(accountId) {
   const customer = await knex(TABLE_NAME_DETAIL_ACCOUNT)
     .select(
@@ -176,4 +215,7 @@ module.exports = {
   getDetailAccountById,
   updateAccountDetailById,
   getCustomerWithLastName,
+  getAccountsUpToDate,
+  getAccountsDebtor,
+  getAccountsMorosos,
 };

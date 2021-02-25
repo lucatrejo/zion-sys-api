@@ -1,4 +1,4 @@
-const { getById, getAll, getCustomerWithName,getAccount,getDetailAccount,getCustomerWithLastName } = require('../repository');
+const { getById, getAll, getCustomerWithName,getAccount,getDetailAccount,getCustomerWithLastName, getAccountsUpToDate, getAccountsDebtor, getAccountsMorosos } = require('../repository');
 const logger = require('../../../logger');
 const { getSaleDetailsBySaleId } = require('../../sales/repository');
 
@@ -96,10 +96,87 @@ async function getAccounts(req, res) {
   }
 }
 
+async function getUpToDate(req, res) {
+  logger.info("LLEGO");
+  let result = [];
+
+  try {
+    logger.info("LLEGO");
+
+    result = await getAccountsUpToDate();
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting report' });
+  }
+
+  if (result) {
+    return res.send({ result });
+  }
+}
+
+async function getDebtors(req, res) {
+  logger.info("LLEGO");
+  let result = [];
+
+  try {
+    logger.info("LLEGO");
+
+    result = await getAccountsDebtor();
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting report' });
+  }
+
+  if (result) {
+    return res.send({ result });
+  }
+}
+
+async function getMorosos(req, res) {
+  logger.info("MOROSO");
+  let result = [];
+
+  try {
+    accounts = await getAccountsMorosos();
+
+    for (const account of accounts) {
+      let date = account.first_debt_date;
+
+      logger.info(date);
+      logger.info(new Date());
+
+      var dateDiff = new Date().getTime() - date.getTime();
+      var daysDiff = Math.floor(dateDiff / (1000 * 60 * 60 * 24));
+      logger.info(daysDiff);
+
+      if (daysDiff >= 45) {
+        result.push(account);
+      }
+    }
+
+
+
+    logger.info(result);
+
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ success: false, messages: 'error getting report' });
+  }
+
+  if (result) {
+    return res.send({ result });
+  }
+}
+
 module.exports = {
   getCustomer,
   getCustomers,
   getCustomerByName,
   getAccounts,
-  getCustomerByLastName
+  getCustomerByLastName,
+  getUpToDate,
+  getDebtors,
+  getMorosos
 };
